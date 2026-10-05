@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>MY CONSTANT ♾️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+Telugu:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b0716;
+      --accent-rose: #e2a9b7;
+      --accent-gold: #f3d092;
+      --accent-purple: #8b5cf6;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-glow: rgba(226, 169, 183, 0.25);
+      --text-light: #f8fafc;
+      --text-sub: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Poppins', 'Noto Sans Telugu', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 0 20px var(--glass-glow);
+    }
+
+    .btn-glow {
+      background: linear-gradient(
+        135deg,
+        rgba(226, 169, 183, 0.2),
+        rgba(139, 92, 246, 0.3)
+      );
+      border: 1px solid var(--accent-rose);
+      color: var(--text-light);
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 15px rgba(226, 169, 183, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-glow:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 25px rgba(226, 169, 183, 0.5);
+    }
+
+    .screen {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      width: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 1;
+    }
+
+    /* Music Control */
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    /* Passcode Screen */
+    .passcode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .pass-key {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pass-dots {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-rose);
+      transition: all 0.2s ease;
+    }
+
+    .dot.filled {
+      background: var(--accent-rose);
+      box-shadow: 0 0 10px var(--accent-rose);
+    }
+
+    /* Dashboard Grid */
+    .grid-menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .menu-card {
+      padding: 20px 15px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .menu-card span {
+      font-size: 1.8rem;
+    }
+
+    /* Telugu Typography */
+    .telugu-text {
+      font-family: 'Noto Sans Telugu', sans-serif;
+      line-height: 1.8;
+      color: #f1f5f9;
+    }
+
+    /* Modal / Popups */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 7, 22, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Balloon Game */
+    .balloon-container {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin: 30px 0;
+    }
+
+    .balloon {
+      width: 60px;
+      height: 75px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      position: relative;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite alternate;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 15px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px) rotate(-2deg);
+      }
+
+      100% {
+        transform: translateY(-15px) rotate(2deg);
+      }
+    }
+
+    /* Cake Animation */
+    .cake-box {
+      position: relative;
+      margin: 30px auto;
+      width: 150px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .flame {
+      width: 12px;
+      height: 20px;
+      background: #ff9800;
+      border-radius: 50% 50% 20% 20%;
+      margin: 0 auto;
+      box-shadow: 0 0 12px #ff9800;
+      animation: flicker 0.6s infinite alternate;
+      transition: opacity 0.5s;
+    }
+
+    @keyframes flicker {
+      0% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    .nav-back {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ================= UPGRADED CINEMATIC PROPOSAL ================= */
+
+    .cinematic-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      overflow: hidden;
+      background: #030208;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 1.4s ease;
+    }
+
+    .cinematic-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .cinema-scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: linear-gradient(
+        180deg,
+        #070817 0%,
+        #17152b 43%,
+        #0a0711 100%
+      );
+    }
+
+    .cinema-sky {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(
+          circle at 73% 22%,
+          rgba(255,216,168,.20),
+          transparent 15%
+        ),
+        radial-gradient(
+          circle at 40% 45%,
+          rgba(157,104,180,.16),
+          transparent 30%
+        );
+    }
+
+    .cinema-stars {
+      position: absolute;
+      inset: 0;
+      opacity: .7;
+      background-image:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.95) 1px,
+          transparent 1.5px
+        ),
+        radial-gradient(
+          circle,
+          rgba(255,218,180,.7) 1px,
+          transparent 1.4px
+        );
+      background-size: 79px 67px,131px 119px;
+      animation: starsDrift 22s linear infinite;
+    }
+
+    @keyframes starsDrift {
+      to {
+        transform: translate3d(-35px,25px,0);
+      }
+    }
+
+    .moon {
+      position: absolute;
+      right: 13%;
+      top: 13%;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #fff1d2;
+      box-shadow:
+        0 0 70px rgba(255,224,170,.55),
+        0 0 130px rgba(255,224,170,.15);
+    }
+
+    .moon:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow:
+        -10px 8px 0 -3px rgba(180,153,125,.16),
+        12px -10px 0 -8px rgba(180,153,125,.12);
+    }
+
+    .horizon-glow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 28%;
+      height: 32%;
+      background:
+        radial-gradient(
+          ellipse at 50% 100%,
+          rgba(236,145,126,.20),
+          transparent 65%
+        );
+      filter: blur(15px);
+    }
+
+    .ground {
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      bottom: -20%;
+      height: 47%;
+      background: #05040a;
+      border-radius: 50% 50% 0 0 / 17% 17% 0 0;
+      box-shadow: 0 -35px 80px rgba(0,0,0,.65);
+    }
+
+    .path {
+      position: absolute;
+      bottom: -12%;
+      left: 50%;
+      width: 220px;
+      height: 55%;
+      transform:
+        translateX(-50%)
+        perspective(400px)
+        rotateX(63deg);
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(248,192,143,.10),
+          transparent
+        );
+      filter: blur(8px);
+    }
+
+    .lamp {
+      position: absolute;
+      bottom: 29%;
+      width: 5px;
+      height: 110px;
+      background: #17151b;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .lamp:before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      left: -7px;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: #ffd89a;
+      box-shadow:
+        0 0 28px 10px rgba(255,197,125,.25);
+    }
+
+    .lamp.one {
+      left: 16%;
+    }
+
+    .lamp.two {
+      right: 17%;
+      height: 75px;
+      bottom: 31%;
+    }
+
+    .cinematic-character {
+      position: absolute;
+      bottom: 17%;
+      width: 86px;
+      height: 205px;
+      transform-origin: bottom center;
+      z-index: 3;
+    }
+
+    .character-head {
+      position: absolute;
+      top: 0;
+      left: 25px;
+      width: 43px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#d08a67,#71442f);
+      z-index: 2;
+    }
+
+    .character-hair {
+      position: absolute;
+      top: -8px;
+      left: 15px;
+      width: 62px;
+      height: 65px;
+      border-radius: 55% 55% 38% 45%;
+      background: #110d14;
+      z-index: 3;
+    }
+
+    .character-body {
+      position: absolute;
+      top: 42px;
+      left: 8px;
+      width: 70px;
+      height: 125px;
+      border-radius: 30px 30px 13px 13px;
+    }
+
+    .character-leg {
+      position: absolute;
+      top: 156px;
+      width: 21px;
+      height: 63px;
+      border-radius: 12px;
+      background: #131018;
+    }
+
+    .character-leg.left {
+      left: 21px;
+    }
+
+    .character-leg.right {
+      right: 21px;
+    }
+
+    .girl {
+      left: 19%;
+      animation:
+        girlWalk 5s cubic-bezier(.18,.72,.22,1) forwards;
+    }
+
+    .girl .character-body {
+      background:
+        linear-gradient(
+          90deg,
+          #3b1c45,
+          #b94e77,
+          #3b1c45
+        );
+    }
+
+    .boy {
+      right: 20%;
+      animation: boyWaiting 5s ease forwards;
+    }
+
+    .boy .character-body {
+      background:
+        linear-gradient(
+          90deg,
+          #0d111a,
+          #354050,
+          #0d111a
+        );
+    }
+
+    @keyframes girlWalk {
+      0% {
+        transform: translateX(-280px) scale(.86);
+      }
+
+      58% {
+        transform: translateX(80px) scale(.98);
+      }
+
+      82% {
+        transform: translateX(22px) scale(1);
+      }
+
+      100% {
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes boyWaiting {
+      0%,62% {
+        transform: scale(1) rotateY(0);
+      }
+
+      78% {
+        transform: scale(1) rotateY(-12deg);
+      }
+
+      100% {
+        transform: scale(1) rotateY(-18deg);
+      }
+    }
+
+    .girl-hand {
+      position: absolute;
+      left: 3px;
+      top: 86px;
+      width: 17px;
+      height: 65px;
+      border-radius: 12px;
+      background: #c37c60;
+      transform: rotate(18deg);
+      z-index: 1;
+      animation:
+        handMove 1.5s ease 5.3s forwards;
+    }
+
+    @keyframes handMove {
+      to {
+        transform: rotate(-48deg) translateY(8px);
+      }
+    }
+
+    .ring-box {
+      position: absolute;
+      left: calc(19% + 63px);
+      bottom: 39%;
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      border: 3px solid #f8d68f;
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(.2) translateY(25px);
+      animation:
+        ringShow 2s ease 5.5s forwards;
+      box-shadow:
+        0 0 20px rgba(255,214,143,.7),
+        0 0 50px rgba(255,214,143,.25);
+    }
+
+    .ring-box:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      transform: translate(-50%,-50%);
+      border-radius: 50%;
+      background: #fff3ca;
+      box-shadow:
+        0 0 15px 4px rgba(255,243,202,.8);
+    }
+
+    @keyframes ringShow {
+      0% {
+        opacity: 0;
+        transform: scale(.2) translateY(25px);
+      }
+
+      45% {
+        opacity: 1;
+        transform: scale(1.25) translateY(0);
+      }
+
+      70% {
+        transform: scale(.94);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .proposal-kneel {
+      position: absolute;
+      left: calc(19% + 12px);
+      bottom: 16%;
+      width: 100px;
+      height: 60px;
+      z-index: 4;
+      opacity: 0;
+      border-bottom: 4px solid #b94e77;
+      border-radius: 50%;
+      animation: kneel 1.4s ease 7.1s forwards;
+    }
+
+    @keyframes kneel {
+      to {
+        opacity: 1;
+        transform: translateY(7px) rotate(-4deg);
+      }
+    }
+
+    .story-copy {
+      position: absolute;
+      top: 11%;
+      left: 50%;
+      width: min(92%,780px);
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 6;
+      color: white;
+      opacity: 0;
+      animation: storyIn 1.2s ease 1.2s forwards;
+    }
+
+    .story-copy .eyebrow {
+      letter-spacing: 7px;
+      font-size: .65rem;
+      color: #e8c4d0;
+      text-transform: uppercase;
+    }
+
+    .story-copy h1 {
+      margin: 14px 0 10px;
+      font-family: Cinzel,serif;
+      font-weight: 500;
+      font-size: clamp(2rem,6vw,4.5rem);
+      text-shadow: 0 0 30px rgba(255,208,175,.25);
+    }
+
+    .story-copy p {
+      font-family: 'Noto Sans Telugu',sans-serif;
+      color: #eee5eb;
+      font-size: clamp(.85rem,2vw,1.1rem);
+      line-height: 1.9;
+    }
+
+    .story-copy .proposal-line {
+      margin-top: 14px;
+      color: #ffd89e;
+      font-size: clamp(1rem,2.5vw,1.35rem);
+      opacity: 0;
+      animation: proposalText 1s ease 2.1s forwards;
+    }
+
+    @keyframes storyIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%,25px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%,0);
+      }
+    }
+
+    @keyframes proposalText {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .cinematic-cta {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 8;
+      opacity: 0;
+      animation: ctaAppear 1s ease 2.8s forwards;
+      white-space: nowrap;
+    }
+
+    @keyframes ctaAppear {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .cinema-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 38%,
+          rgba(0,0,0,.62) 100%
+        );
+    }
+
+    .film-bars:before,
+    .film-bars:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 8vh;
+      background: #000;
+      z-index: 10;
+    }
+
+    .film-bars:before {
+      top: 0;
+    }
+
+    .film-bars:after {
+      bottom: 0;
+    }
+
+    @media(max-width:600px) {
+
+      .girl {
+        left: 7%;
+      }
+
+      .boy {
+        right: 6%;
+      }
+
+      .ring-box {
+        left: calc(7% + 61px);
+      }
+
+      .cinematic-character {
+        transform: scale(.78);
+        transform-origin: bottom center;
+      }
+
+      .girl {
+        animation-name: girlWalkMobile;
+      }
+
+      .boy {
+        animation-name: boyWaitingMobile;
+      }
+
+      @keyframes girlWalkMobile {
+
+        0% {
+          transform: translateX(-180px) scale(.78);
+        }
+
+        58% {
+          transform: translateX(48px) scale(.78);
+        }
+
+        82% {
+          transform: translateX(10px) scale(.78);
+        }
+
+        100% {
+          transform: translateX(0) scale(.78);
+        }
+      }
+
+      @keyframes boyWaitingMobile {
+
+        0%,62% {
+          transform: scale(.78);
+        }
+
+        78% {
+          transform: scale(.78) rotateY(-12deg);
+        }
+
+        100% {
+          transform: scale(.78) rotateY(-18deg);
+        }
+      }
+    }
+
+
+    /* =========================
+   A LITTLE MOMENT
+========================= */
+
+.moment-modal {
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(226,169,183,.12),
+      transparent 35%
+    ),
+    rgba(11,7,22,.94);
+}
+
+.moment-content {
+  text-align: center;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.moment-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.8) 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(243,208,146,.6) 1px,
+      transparent 1.5px
+    );
+
+  background-size: 70px 65px,120px 110px;
+  animation: momentStars 18s linear infinite;
+}
+
+@keyframes momentStars {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-35px);
+  }
+}
+
+.moment-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(226,169,183,.22),
+      rgba(139,92,246,.08),
+      transparent 70%
+    );
+
+  filter: blur(12px);
+  animation: momentGlow 4s ease-in-out infinite;
+}
+
+.moment-title {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 10px;
+  transition:
+    opacity .5s ease,
+    transform .5s ease;
+}
+
+.moment-title h3 {
+  color: var(--accent-rose);
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+}
+
+.moment-title p {
+  color: var(--text-sub);
+  font-size: .85rem;
+}
+
+.moment-heart {
+  position: relative;
+  z-index: 4;
+
+  width: 105px;
+  height: 105px;
+
+  margin: 30px 0;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 3.2rem;
+
+  cursor: pointer;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(243,208,146,.22),
+      rgba(226,169,183,.10),
+      transparent 70%
+    );
+
+  border: 1px solid rgba(226,169,183,.35);
+
+  box-shadow:
+    0 0 25px rgba(226,169,183,.25),
+    0 0 70px rgba(243,208,146,.10);
+
+  animation: momentHeart 2.2s ease-in-out infinite;
+
+  transition:
+    transform .5s ease,
+    opacity .5s ease;
+}
+
+.moment-heart:active {
+  transform: scale(.92);
+}
+
+@keyframes momentHeart {
+
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.moment-hint {
+  position: relative;
+  z-index: 4;
+  color: rgba(255,255,255,.65);
+  font-size: .82rem;
+  animation: hintPulse 2s ease-in-out infinite;
+  transition:
+    opacity .4s ease;
+}
+
+/* MESSAGE */
+
+.moment-message {
+  position: absolute;
+  inset: 40px 20px 20px;
+
+  z-index: 8;
+
+  display: none;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .5s ease;
+}
+
+.moment-message.show {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.moment-line {
+  max-width: 360px;
+
+  margin: 7px 0;
+
+  color: rgba(255,255,255,.92);
+
+  font-family: 'Noto Sans Telugu', sans-serif;
+
+  font-size: .95rem;
+
+  line-height: 1.9;
+
+  opacity: 0;
+
+  transform: translateY(18px);
+}
+
+.moment-message.show .moment-line:nth-child(1) {
+  animation: momentLineIn .8s ease .2s forwards;
+}
+
+.moment-message.show .moment-line:nth-child(2) {
+  animation: momentLineIn .8s ease 1s forwards;
+}
+
+.moment-message.show .moment-line:nth-child(3) {
+  animation: momentLineIn .8s ease 1.8s forwards;
+}
+
+.moment-line.special {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.moment-message.show .moment-line.special {
+  animation: momentLineIn .9s ease 2.6s forwards;
+}
+
+.moment-final {
+  margin-top: 20px;
+
+  color: rgba(255,255,255,.55);
+
+  font-size: .78rem;
+
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.moment-message.show .moment-final {
+  animation: momentLineIn 1s ease 3.5s forwards;
+}
+
+.moment-next {
+  margin-top: 22px;
+
+  opacity: 0;
+  transform: translateY(15px);
+
+  pointer-events: none;
+}
+
+.moment-message.show .moment-next {
+  animation: momentLineIn 1s ease 4.3s forwards;
+  pointer-events: auto;
+}
+
+@keyframes momentLineIn {
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes momentGlow {
+
+  0%,100% {
+    transform: scale(.9);
+    opacity: .55;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes hintPulse {
+
+  0%,100% {
+    opacity: .4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.moment-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  pointer-events: none;
+
+  z-index: 20;
+
+  color: var(--accent-gold);
+
+  text-shadow:
+    0 0 10px rgba(243,208,146,.7);
+}
+
+@media(max-width:600px) {
+
+  .moment-content {
+    min-height: 500px;
+  }
+
+  .moment-line {
+    font-size: .88rem;
+  }
+
+  .moment-heart {
+    width: 95px;
+    height: 95px;
+    font-size: 2.8rem;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== UPGRADED CINEMATIC PROPOSAL ===== -->
+
+  <section class="cinematic-overlay" id="cinematicIntro">
+
+    <div class="cinema-scene">
+
+      <div class="cinema-sky"></div>
+      <div class="cinema-stars"></div>
+      <div class="moon"></div>
+      <div class="horizon-glow"></div>
+      <div class="ground"></div>
+      <div class="path"></div>
+
+      <div class="lamp one"></div>
+      <div class="lamp two"></div>
+
+      <div class="character-head"></div>
+      <div class="character-body"></div>
+      <div class="girl-hand"></div>
+      <div class="character-leg left"></div>
+      <div class="character-leg right"></div>
+
+      <div class="character-head"></div>
+      <div class="character-body"></div>
+      <div class="character-leg left"></div>
+      <div class="character-leg right"></div>
+
+      <div class="story-copy">
+
+        <div class="eyebrow">
+          <h2>నీ కోసం.....❤️ నా మనసులోంచి.......❤️</h2>
+        </div>
+
+        <h1>
+          Wishing you many more happy returns of the day! 🎂✨
+        </h1>
+
+      </div>
+
+      <div class="cinematic-cta">
+
+        <button
+          class="btn-glow"
+          onclick="enterLittleWorld()"
+        >
+          LITTLE WORLD ✨
+        </button>
+
+      </div>
+
+      <div class="cinema-vignette"></div>
+
+      <div class="film-bars"></div>
+
+    </div>
+
+  </section>
+
+
+  <canvas id="bgCanvas"></canvas>
+
+  <button
+    class="music-btn"
+    id="musicToggle"
+    onclick="toggleMusic()"
+  >
+    🎵
+  </button>
+
+
+  <div class="container">
+
+    <!-- OPENING SCREEN -->
+
+    <div
+      id="screen-opening"
+      class="screen active"
+    >
+
+      <div style="text-align: center;">
+
+        <h1
+          style="
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            color: var(--accent-rose);
+            margin-bottom: 5px;
+          "
+        >
+          MY CONSTANT
+        </h1>
+
+        <div
+          style="
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+          "
+        >
+          ♾️
+        </div>
+
+        <p
+          class="telugu-text"
+          style="
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 30px;
+            font-weight: 300;
+          "
+        >
+          నువ్వు నా జీవితంలో చాలా ప్రత్యేకం..... ✨<br>
+        </p>
+
+        <button
+          class="btn-glow"
+          onclick="goToScreen('passcode')"
+        >
+          A SMALL SURPRISE FOR YOU. ✨
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- PASSCODE SCREEN -->
+
+    <div
+      id="screen-passcode"
+      class="screen"
+    >
+
+      <div
+        class="glass-card"
+        style="
+          text-align: center;
+          width: 100%;
+        "
+      >
+
+        <h3
+          style="
+            font-size: 1.1rem;
+            color: var(--accent-rose);
+            margin-bottom: 5px;
+          "
+        >
+          Enter the Passcode
+        </h3>
+
+        <p
+          style="
+            font-size: 0.8rem;
+            color: var(--text-sub);
+          "
+        >
+          Hint: Special Birthday Date (1007)
+        </p>
+
+
+        <div
+          class="pass-dots"
+          style="justify-content: center;"
+        >
+
+          <div class="dot" id="dot-0"></div>
+          <div class="dot" id="dot-1"></div>
+          <div class="dot" id="dot-2"></div>
+          <div class="dot" id="dot-3"></div>
+
+        </div>
+
+
+        <div
+          class="passcode-grid"
+          style="margin: 0 auto;"
+        >
+
+          <div class="pass-key" onclick="pressKey('1')">1</div>
+          <div class="pass-key" onclick="pressKey('2')">2</div>
+          <div class="pass-key" onclick="pressKey('3')">3</div>
+          <div class="pass-key" onclick="pressKey('4')">4</div>
+          <div class="pass-key" onclick="pressKey('5')">5</div>
+          <div class="pass-key" onclick="pressKey('6')">6</div>
+          <div class="pass-key" onclick="pressKey('7')">7</div>
+          <div class="pass-key" onclick="pressKey('8')">8</div>
+          <div class="pass-key" onclick="pressKey('9')">9</div>
+          <div class="pass-key" onclick="clearPass()">C</div>
+          <div class="pass-key" onclick="pressKey('0')">0</div>
+          <div class="pass-key" onclick="checkPass()">✓</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- MAIN DASHBOARD -->
+
+    <div
+      id="screen-dashboard"
+      class="screen"
+    >
+
+      <div
+        style="
+          text-align: center;
+          margin-bottom: 20px;
+        "
+      >
+
+        <h2
+          style="
+            font-family: 'Cinzel', serif;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+          "
+        >
+          Happy Birthday ❤️
+        </h2>
+
+      </div>
+
+
+      <div class="grid-menu">
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-letter')"
+        >
+          <span>💌</span>
+          <div>A Letter For You</div>
+        </div>
+
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-why')"
+        >
+          <span>❤️</span>
+          <div>Why You Matter</div>
+        </div>
+
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-memory')"
+        >
+          <span>🌙</span>
+          <div>A Little Moment</div>
+        </div>
+
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-surprise')"
+        >
+          <span>🎁</span>
+          <div>A Tiny Surprise</div>
+        </div>
+
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-wish')"
+        >
+          <span>🎂</span>
+          <div>Make A Wish</div>
+        </div>
+
+
+        <div
+          class="glass-card menu-card"
+          onclick="openModal('modal-constant')"
+        >
+          <span>♾️</span>
+          <div>My Constant</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL: LETTER -->
+
+  <div
+    class="modal-overlay"
+    id="modal-letter"
+  >
+
+    <div class="glass-card modal-content">
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-letter')"
+      >
+        ✕ Close
+      </button>
+
+
+      <div
+        style="margin-top: 40px;"
+        class="telugu-text"
+      >
+
+        <h3
+          style="
+            color: var(--accent-rose);
+            margin-bottom: 18px;
+            font-weight: 600;
+          "
+        >
+          I LOVE YOU!!!!!!!!!!❤️
+        </h3>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          ముందుగా… WISH YOU MANY MORE HAPPY RETURNS OF THE DAY... 🎂❤️
+          నీ జీవితంలో ఈ కొత్త సంవత్సరం ఎన్నో అందమైన జ్ఞాపకాలను,
+          సంతోషాలను, నవ్వులను తీసుకురావాలని మనస్ఫూర్తిగా కోరుకుంటున్నాను. ✨
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          నిజం చెప్పాలంటే… నీకు ఈ letter రాస్తున్నప్పుడు
+          ఎక్కడి నుంచి మొదలుపెట్టాలో కూడా నాకు తెలియడం లేదు.
+          ఎందుకంటే నువ్వు నా జీవితంలో ఎంత ముఖ్యమైన వ్యక్తివో
+          కొన్ని మాటల్లో చెప్పడం అంత సులభం కాదు. ❤️
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          నువ్వు నా జీవితంలోకి వచ్చిన తర్వాత…
+          <strong>నా జీవితం పూర్తిగా మారిపోయింది.</strong>
+          ఇంతకుముందు ఉన్న నా ప్రపంచానికి,
+          నువ్వు వచ్చిన తర్వాత ఒక కొత్త అర్థం వచ్చింది.
+        </p>
+
+
+        <p
+          style="
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            margin-bottom: 16px;
+          "
+        >
+          “నువ్వు నా జీవితంలోకి వచ్చిన తర్వాత నా జీవితం మారిపోయింది; <br>
+
+          <strong>
+            నువ్వే నా జీవితంలో ఒక భాగమైపోయావు.<br>
+            నువ్వే నా ప్రపంచమైపోయావు. ❤️♾️
+          </strong>
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          నీతో మాట్లాడినప్పుడు కలిగే ఆనందం,
+          నువ్వు ఉన్నావనే భావన ఇచ్చే ప్రశాంతత,
+          నువ్వు నాతో ఉన్నావనే నమ్మకం…
+          ఇవన్నీ నాకు చాలా ప్రత్యేకమైనవి.
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          కొన్ని సందర్భాల్లో మాటలు లేకపోయినా,
+          నువ్వు ఉన్నావనే ఆలోచనే నాకు ఒక ధైర్యంలా అనిపిస్తుంది.
+          ఏదైనా ఎదురైనా…
+          నువ్వు ఉన్నావనే నమ్మకం నాకు తెలియని ఒక బలాన్ని ఇస్తుంది. 🥹❤️
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          నా జీవితంలో ఎంతోమంది ఉండొచ్చు…
+          కానీ నువ్వు నా జీవితంలో సంపాదించుకున్న ఈ స్థానం
+          మాత్రం ఇంకెవరికీ లేదు.
+          అది ఎప్పటికీ నీదే. ♾️
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          ఈ రోజు నీ పుట్టినరోజు కాబట్టి,
+          నీకు ఒకటే కోరుకుంటున్నాను…
+          నువ్వు ఎప్పుడూ సంతోషంగా ఉండాలి,
+          నీ ముఖంలో ఆ నవ్వు ఎప్పుడూ అలాగే ఉండాలి,
+          నీ మనసులో ఉన్న ప్రతి మంచి కోరిక నెరవేరాలి. ✨
+        </p>
+
+
+        <p style="font-size: 0.92rem; margin-bottom: 14px;">
+          ఎన్ని సంవత్సరాలు గడిచినా,
+          జీవితంలో ఎన్ని మార్పులు వచ్చినా…
+          <strong>
+            నా జీవితంలో నువ్వు తీసుకున్న స్థానం మాత్రం ఎప్పటికీ మారదు.
+          </strong>
+          ❤️
+        </p>
+
+
+        <p
+          style="
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            margin-top: 22px;
+          "
+        >
+          నువ్వు నా జీవితంలోకి వచ్చినందుకు…<br>
+          నా జీవితాన్ని ఇంత అందంగా మార్చినందుకు…<br>
+          నా ప్రపంచంలో నువ్వు ఉన్నందుకు…<br>
+          నేను ఎప్పటికీ THANKS.... ❤️♾️
+        </p>
+
+
+        <p
+          style="
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            margin-top: 20px;
+          "
+        >
+          Happy Birthday to my MAN. 🎂❤️<br>
+          I LOVE YOU!!!!.I MISS YOU!!!!! ♾️✨<br>
+          WISH YOU MANY MORE HAPPY RETURNS OF THE DAY!!!!!
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL: WHY YOU MATTER -->
+
+  <div
+    class="modal-overlay"
+    id="modal-why"
+  >
+
+    <div
+      class="glass-card modal-content"
+      style="text-align: center;"
+    >
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-why')"
+      >
+        ✕ Close
+      </button>
+
+
+      <h3
+        style="
+          margin-top: 40px;
+          color: var(--accent-rose);
+          margin-bottom: 20px;
+        "
+      >
+        Why You Matter ❤️
+      </h3>
+
+
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        "
+        class="telugu-text"
+      >
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “నీతో మాట్లాడటానికి ఒక ప్రత్యేకమైన కారణం అవసరం లేదు… నువ్వే ఒక కారణం. ❤️”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “రోజు ఎంత బిజీగా ఉన్నా… నీతో మాట్లాడితే ఆ రోజు ఇంకాస్త బాగుంది అనిపిస్తుంది. ✨”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “నీ చిన్న చిన్న మాటలు కూడా నాకు తెలియకుండానే నా ముఖంలో ఒక smile తీసుకొస్తాయి. 🫶”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “నీతో మాట్లాడేటప్పుడు నేను ఏదీ నటించాల్సిన అవసరం అనిపించదు… నేను నేనుగా ఉండగలను. ❤️”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “మన మధ్య జరిగే చిన్న చిన్న conversations కూడా నాకు పెద్ద జ్ఞాపకాలుగా మిగిలిపోతాయి. 🌙”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “నువ్వు చేసే కొన్ని చిన్న విషయాలు… నీకు చిన్నవిగా అనిపించొచ్చు, కానీ నాకు మాత్రం అవి చాలా విలువైనవి. 🥹”
+        </div>
+
+        <div class="glass-card" style="padding: 15px; font-size: 0.88rem;">
+          “నువ్వు చేసే చిన్న చిన్న పనుల్లో కూడా నీ మనసు కనిపిస్తుంది… అందుకే నువ్వంటే నాకు అంత ప్రత్యేకం.❤️”
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL: A LITTLE MOMENT
+       ========================================================= -->
+
+  <div
+    class="modal-overlay moment-modal"
+    id="modal-memory"
+  >
+
+    <div
+      class="glass-card modal-content moment-content"
+    >
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-memory')"
+      >
+        ✕ Close
+      </button>
+
+      <div class="moment-stars"></div>
+
+      <div class="moment-glow"></div>
+
+      <div class="moment-title">
+        <h3>A Little Moment 🌙</h3>
+
+        <p>
+          ఒక్క చిన్న moment... నీ కోసం. ❤️
+        </p>
+      </div>
+
+
+      <!-- HEART -->
+
+      <div
+        class="moment-heart"
+        id="momentHeart"
+        onclick="openLittleMoment()"
+      >
+        ♡
+      </div>
+
+
+      <div
+        class="moment-hint"
+        id="momentHint"
+      >
+        Tap the heart 🤍
+      </div>
+
+
+      <!-- MESSAGE -->
+
+      <div
+        class="moment-message"
+        id="momentMessage"
+      >
+
+        <div class="moment-line">
+          కొన్ని moments ఉంటాయి...
+        </div>
+
+        <div class="moment-line">
+           అవి మన మనసులో మాత్రం నిలిచిపోతాయి. ❤️
+        </div>
+
+        <div class="moment-line">
+          అలాంటి ఒక MOMENT...
+          నా life లో నువ్వు.
+        </div>
+
+        <div class="moment-line special">
+          నువ్వు నా జీవితంలో ఒక అద్భుతం ✨❤️ అయిపోయావు. ♾️
+        </div>
+
+        <div class="moment-final">
+          ఈ చిన్న MOMENT ని కూడా నాతో పాటు గుర్తుపెట్టుకో. 🌙❤️
+        </div>
+
+        <button
+          class="btn-glow moment-next"
+          onclick="
+            closeModal('modal-memory');
+            openModal('modal-surprise');
+          "
+        >
+          Continue to my little world →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL: SURPRISE -->
+
+  <div
+    class="modal-overlay"
+    id="modal-surprise"
+  >
+
+    <div
+      class="glass-card modal-content"
+      style="text-align: center;"
+    >
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-surprise')"
+      >
+        ✕ Close
+      </button>
+
+      <h3
+        style="
+          margin-top: 40px;
+          color: var(--accent-rose);
+        "
+      >
+        A Tiny Surprise 🎁
+      </h3>
+
+      <div
+        style="
+          font-size: 4rem;
+          margin: 20px 0;
+          cursor: pointer;
+        "
+        onclick="openSurprise(this)"
+      >
+        🎁
+      </div>
+
+      <div
+        id="surprise-text"
+        class="telugu-text"
+        style="
+          display: none;
+          font-size: 0.95rem;
+          margin-top: 15px;
+        "
+      >
+
+        Surprise! ❤️<br>
+
+        నువ్వు అనుకున్న దానికంటే నువ్వు నాకు చాలా ప్రత్యేకం!<br><br>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL: MAKE A WISH -->
+
+  <div
+    class="modal-overlay"
+    id="modal-wish"
+  >
+
+    <div
+      class="glass-card modal-content"
+      style="text-align: center;"
+    >
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-wish')"
+      >
+        ✕ Close
+      </button>
+
+      <h3
+        style="
+            margin-top: 40px;
+            color: var(--accent-rose);
+        
+        "
+>
+        Make A Wish 🎂✨
+       </h3>
+
+      <p
+        style="
+          font-size: 0.8rem;
+          color: var(--text-sub);
+          margin-top: 5px;
+        "
+      >
+        Tap the candle....
+      </p>
+
+      <div
+        class="cake-box"
+        onclick="blowCandle()"
+      >
+
+        <div
+          class="flame"
+          id="flame"
+        ></div>
+
+        <div
+          style="
+            width: 8px;
+            height: 15px;
+            background: #ddd;
+            margin: 0 auto;
+          "
+        ></div>
+
+        <div
+          style="
+            width: 120px;
+            height: 50px;
+            background:
+              linear-gradient(
+                to right,
+                #f3d092,
+                #e2a9b7
+              );
+            border-radius: 10px 10px 0 0;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0716;
+            font-weight: bold;
+          "
+        >
+          OCT 07
+        </div>
+
+      </div>
+
+      <div
+        id="wish-result"
+        class="telugu-text"
+        style="
+          display: none;
+          margin-top: 20px;
+        "
+      >
+
+        <p
+          style="
+            font-size: 1rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+          "
+        >
+          “నీ జీవితంలోకి వచ్చే ప్రతి రోజు
+ఒక కొత్త సంతోషాన్ని తీసుకురావాలి…
+నువ్వు కోరుకునే ప్రతి కల నిజమవ్వాలి.
+నువ్వు ఎప్పుడూ సంతోషంగా ఉండాలి — ❤️♾️”
+        </p>
+
+        <p
+          style="
+            font-size: 0.85rem;
+            margin-top: 10px;
+            color: var(--text-sub);
+          "
+        >
+          Happy Birthday, MY MAN. 🎂✨
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL: MY CONSTANT -->
+
+  <div
+    class="modal-overlay"
+    id="modal-constant"
+  >
+
+    <div
+      class="glass-card modal-content"
+      style="text-align: center;"
+    >
+
+      <button
+        class="nav-back"
+        onclick="closeModal('modal-constant')"
+      >
+        ✕ Close
+      </button>
+
+      <div
+        style="margin-top: 40px;"
+        class="telugu-text"
+      >
+
+        <h2
+          style="
+            font-family: 'Cinzel', serif;
+            color: var(--accent-rose);
+            font-size: 1.6rem;
+          "
+        >
+          MY CONSTANT
+        </h2>
+
+        <div
+          style="
+            font-size: 2rem;
+            margin: 10px 0;
+          "
+        >
+          ♾️
+        </div>
+
+        <p
+          style="
+            font-size: 0.9rem;
+            line-height: 1.9;
+            color: var(--text-light);
+            margin-bottom: 20px;
+          "
+        >
+          రోజులు మారవచ్చు... మనుషులు మారవచ్చు...<br>
+          కానీ నా మనసులో నీ స్థానం ఎప్పటికీ మారదు.
+        </p>
+
+        <p
+          style="
+            font-size: 0.9rem;
+            line-height: 1.9;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+          "
+        >
+          ఈ ప్రపంచంలో ఎక్కడున్నా,
+          నువ్వు ఎప్పటికీ నాకు అత్యంత విలువైన వ్యక్తివి. ❤️
+        </p>
+
+        <div
+          style="
+            border-top: 1px solid var(--glass-border);
+            padding-top: 15px;
+            margin-top: 20px;
+          "
+        >
+
+          <p
+            style="
+              font-size: 0.8rem;
+              color: var(--text-sub);
+            "
+          >
+            ఈ చిన్న ప్రపంచం నీ కోసం ఎప్పటికీ ఇక్కడే ఉంటుంది. ♾️” ❤️
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /* =========================
+       BACKGROUND PARTICLES
+    ========================= */
+
+    const canvas =
+      document.getElementById('bgCanvas');
+
+    const ctx =
+      canvas.getContext('2d');
+
+    let particles = [];
+
+
+    function resizeCanvas() {
+
+      canvas.width =
+        window.innerWidth;
+
+      canvas.height =
+        window.innerHeight;
+
+    }
+
+
+    window.addEventListener(
+      'resize',
+      resizeCanvas
+    );
+
+    resizeCanvas();
+
+
+    class Particle {
+
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+
+        this.x =
+          Math.random() * canvas.width;
+
+        this.y =
+          Math.random() * canvas.height;
+
+        this.size =
+          Math.random() * 2 + 0.5;
+
+        this.speedY =
+          Math.random() * -0.5 - 0.1;
+
+        this.opacity =
+          Math.random() * 0.7 + 0.2;
+      }
+
+
+      update() {
+
+        this.y += this.speedY;
+
+        if (this.y < 0) {
+          this.reset();
+        }
+
+      }
+
+
+      draw() {
+
+        ctx.fillStyle =
+          `rgba(
+            226,
+            169,
+            183,
+            ${this.opacity}
+          )`;
+
+        ctx.beginPath();
+
+        ctx.arc(
+          this.x,
+          this.y,
+          this.size,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.fill();
+
+      }
+
+    }
+
+
+    for (let i = 0; i < 60; i++) {
+
+      particles.push(
+        new Particle()
+      );
+
+    }
+
+
+    function animateParticles() {
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      particles.forEach(p => {
+
+        p.update();
+        p.draw();
+
+      });
+
+      requestAnimationFrame(
+        animateParticles
+      );
+
+    }
+
+
+    animateParticles();
+
+
+    /* =========================
+       CINEMATIC INTRO
+    ========================= */
+
+    function enterLittleWorld() {
+
+      const intro =
+        document.getElementById(
+          'cinematicIntro'
+        );
+
+      intro.classList.add('hide');
+
+      setTimeout(() => {
+
+        intro.style.display = 'none';
+
+        goToScreen('opening');
+
+      }, 1400);
+
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    function goToScreen(screenId) {
+
+      document
+        .querySelectorAll('.screen')
+        .forEach(s => {
+
+          s.classList.remove(
+            'active'
+          );
+
+        });
+
+
+      const target =
+        document.getElementById(
+          'screen-' + screenId
+        );
+
+      if (target) {
+
+        target.classList.add(
+          'active'
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+       PASSCODE
+    ========================= */
+
+    let enteredCode = "";
+
+
+    function pressKey(num) {
+
+      if (enteredCode.length < 4) {
+
+        enteredCode += num;
+
+        updateDots();
+
+      }
+
+    }
+
+
+    function clearPass() {
+
+      enteredCode = "";
+
+      updateDots();
+
+    }
+
+
+    function updateDots() {
+
+      for (let i = 0; i < 4; i++) {
+
+        const dot =
+          document.getElementById(
+            `dot-${i}`
+          );
+
+        if (
+          i < enteredCode.length
+        ) {
+
+          dot.classList.add(
+            'filled'
+          );
+
+        } else {
+
+          dot.classList.remove(
+            'filled'
+          );
+
+        }
+
+      }
+
+    }
+
+
+    function checkPass() {
+
+      if (
+        enteredCode === "1007"
+      ) {
+
+        triggerConfetti();
+
+        goToScreen(
+          'dashboard'
+        );
+
+      } else {
+
+        alert(
+          "Wrong Passcode! (Hint: 1007)"
+        );
+
+        clearPass();
+
+      }
+
+    }
+
+
+    /* =========================
+       MODALS
+    ========================= */
+
+    function openModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+      if (modal) {
+
+        modal.classList.add(
+          'active'
+        );
+
+      }
+
+    }
+
+
+    function closeModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+      if (modal) {
+
+        modal.classList.remove(
+          'active'
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+   A LITTLE MOMENT
+========================= */
+
+function openLittleMoment() {
+
+  const heart =
+    document.getElementById('momentHeart');
+
+  const hint =
+    document.getElementById('momentHint');
+
+  const title =
+    document.querySelector('.moment-title');
+
+  const message =
+    document.getElementById('momentMessage');
+
+
+  if (!message) {
+    return;
+  }
+
+
+  /* Hide the old title */
+
+  if (title) {
+
+    title.style.opacity = '0';
+
+    title.style.transform =
+      'translateY(-10px)';
+
+    title.style.pointerEvents =
+      'none';
+
+  }
+
+
+  /* Hide heart */
+
+  if (heart) {
+
+    heart.style.opacity = '0';
+
+    heart.style.transform =
+      'scale(.4)';
+
+    heart.style.pointerEvents =
+      'none';
+
+  }
+
+
+  /* Hide hint */
+
+  if (hint) {
+
+    hint.style.opacity = '0';
+
+    hint.style.pointerEvents =
+      'none';
+
+  }
+
+
+  /* Show message */
+
+  message.classList.remove('show');
+
+  void message.offsetWidth;
+
+  message.classList.add('show');
+
+
+  /* Magical particles */
+
+  triggerMomentParticles();
+
+}
+
+
+/* Reset A Little Moment when reopened */
+
+function resetLittleMoment() {
+
+  const heart =
+    document.getElementById('momentHeart');
+
+  const hint =
+    document.getElementById('momentHint');
+
+  const title =
+    document.querySelector('.moment-title');
+
+  const message =
+    document.getElementById('momentMessage');
+
+
+  if (heart) {
+
+    heart.style.opacity = '1';
+
+    heart.style.transform =
+      '';
+
+    heart.style.pointerEvents =
+      'auto';
+
+  }
+
+
+  if (hint) {
+
+    hint.style.opacity = '1';
+
+    hint.style.pointerEvents =
+      'auto';
+
+  }
+
+
+  if (title) {
+
+    title.style.opacity = '1';
+
+    title.style.transform =
+      '';
+
+    title.style.pointerEvents =
+      'auto';
+
+  }
+
+
+  if (message) {
+
+    message.classList.remove('show');
+
+  }
+
+}
+
+
+function triggerMomentParticles() {
+
+  const stage =
+    document.querySelector(
+      '.moment-content'
+    );
+
+
+  if (!stage) {
+    return;
+  }
+
+
+  for (
+    let i = 0;
+    i < 22;
+    i++
+  ) {
+
+    const particle =
+      document.createElement(
+        'div'
+      );
+
+
+    particle.className =
+      'moment-particle';
+
+
+    particle.innerHTML =
+      '✦';
+
+
+    particle.style.fontSize =
+      (
+        8 +
+        Math.random() * 12
+      ) + 'px';
+
+
+    const angle =
+      Math.random() *
+      Math.PI * 2;
+
+
+    const distance =
+      100 +
+      Math.random() * 220;
+
+
+    particle.animate(
+
+      [
+
+        {
+          transform:
+            'translate(-50%, -50%) scale(0)',
+
+          opacity: 0
+        },
+
+
+        {
+          transform:
+            'translate(-50%, -50%) scale(1)',
+
+          opacity: 1,
+
+          offset: .2
+        },
+
+
+        {
+          transform:
+            `translate(
+              calc(
+                -50% +
+                ${Math.cos(angle) * distance}px
+              ),
+              calc(
+                -50% +
+                ${Math.sin(angle) * distance}px
+              )
+            ) scale(0)`,
+
+          opacity: 0
+        }
+
+      ],
+
+      {
+
+        duration:
+          1800 +
+          Math.random() * 1000,
+
+        easing:
+          'ease-out'
+
+      }
+
+    );
+
+
+    stage.appendChild(
+      particle
+    );
+
+
+    setTimeout(() => {
+
+      particle.remove();
+
+    }, 3000);
+
+  }
+
+}
+
+    /* =========================
+       SURPRISE
+    ========================= */
+
+    function openSurprise(el) {
+
+      el.innerText =
+        "✨💖✨";
+
+      document
+        .getElementById(
+          'surprise-text'
+        )
+        .style.display =
+        'block';
+
+      triggerConfetti();
+
+    }
+
+
+    /* =========================
+       CAKE
+    ========================= */
+
+    function blowCandle() {
+
+      const flame =
+        document.getElementById(
+          'flame'
+        );
+
+      if (!flame) {
+        return;
+      }
+
+
+      flame.style.opacity =
+        '0';
+
+
+      setTimeout(() => {
+
+        document
+          .getElementById(
+            'wish-result'
+          )
+          .style.display =
+          'block';
+
+        triggerConfetti();
+
+      }, 300);
+
+    }
+
+
+    /* =========================
+       CONFETTI
+    ========================= */
+
+    function triggerConfetti() {
+
+      if (
+        typeof confetti ===
+        'function'
+      ) {
+
+        confetti({
+
+          particleCount: 50,
+
+          spread: 60,
+
+          origin: {
+            y: 0.7
+          }
+
+        });
+
+      }
+
+    }
+
+
+    /* =========================
+       WEB AUDIO
+    ========================= */
+
+    let audioCtx = null;
+
+    let isPlaying = false;
+
+
+    function toggleMusic() {
+
+      const btn =
+        document.getElementById(
+          'musicToggle'
+        );
+
+
+      if (!audioCtx) {
+
+        audioCtx =
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
+      }
+
+
+      if (!isPlaying) {
+
+        audioCtx.resume();
+
+        isPlaying = true;
+
+        btn.innerText =
+          "🔊";
+
+      } else {
+
+        audioCtx.suspend();
+
+        isPlaying = false;
+
+        btn.innerText =
+          "🎵";
+
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
